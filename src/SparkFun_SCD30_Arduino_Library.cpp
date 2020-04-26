@@ -285,12 +285,19 @@ uint16_t SCD30::readRegister(uint16_t registerAddress)
   if (_i2cPort->endTransmission() != 0)
     return (0); //Sensor did not ACK
 
-  _i2cPort->requestFrom((uint8_t)SCD30_ADDRESS, (uint8_t)2);
+  _i2cPort->requestFrom((uint8_t)SCD30_ADDRESS, (uint8_t)3);
   if (_i2cPort->available())
   {
-    uint8_t msb = _i2cPort->read();
-    uint8_t lsb = _i2cPort->read();
-    return ((uint16_t)msb << 8 | lsb);
+    uint8_t data[2];
+    data[0] = _i2cPort->read();
+    data[1] = _i2cPort->read();
+    uint8_t crc = _i2cPort->read();
+    if(crc == computeCRC8(data, 2)) {
+      return ((uint16_t)data[0] << 8 | data[1]);
+    }
+    else {
+      return (0); // CRC does not match.
+    }
   }
   return (0); //Sensor did not respond
 }
