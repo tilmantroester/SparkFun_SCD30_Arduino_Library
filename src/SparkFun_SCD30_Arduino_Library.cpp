@@ -68,14 +68,14 @@ bool SCD30::begin(TwoWire &wirePort)
 
 //Returns the latest available CO2 level
 //If the current level has already been reported, trigger a new read
-uint16_t SCD30::getCO2(void)
+float SCD30::getCO2(void)
 {
   if (co2HasBeenReported == true) //Trigger a new read
     readMeasurement();            //Pull in new co2, humidity, and temp into global vars
 
   co2HasBeenReported = true;
 
-  return (uint16_t)co2; //Cut off decimal as co2 is 0 to 10,000
+  return co2; //Cut off decimal as co2 is 0 to 10,000
 }
 
 //Returns the latest available humidity
@@ -209,10 +209,10 @@ bool SCD30::readMeasurement()
   bool error = false;
   if (_i2cPort->available())
   {
-    byte bytesToCrc[2];
-    for (byte x = 0; x < 18; x++)
+    uint8_t bytesToCrc[2];
+    for (uint8_t x = 0; x < 18; x++)
     {
-      byte incoming = _i2cPort->read();
+      uint8_t incoming = _i2cPort->read();
 
       switch (x)
       {

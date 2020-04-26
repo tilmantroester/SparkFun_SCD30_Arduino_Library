@@ -28,7 +28,6 @@
 #ifndef __SparkFun_SCD30_ARDUINO_LIBARARY_H__
 #define __SparkFun_SCD30_ARDUINO_LIBARARY_H__
 
-#include "Arduino.h"
 #include <Wire.h>
 
 //The default I2C address for the SCD30 is 0x61.
@@ -55,7 +54,7 @@ public:
 	bool beginMeasuring(uint16_t pressureOffset);
 	bool beginMeasuring(void);
 
-	uint16_t getCO2(void);
+	float getCO2(void);
 	float getHumidity(void);
 	float getTemperature(void);
 	float getTemperatureOffset(void);
